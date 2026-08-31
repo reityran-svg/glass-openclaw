@@ -16,19 +16,18 @@ jobs:
         run: |
           xcodebuild -scheme GlassOpenClaw -destination 'generic/platform=iOS' -configuration Release CODE_SIGNING_ALLOWED=NO build
         continue-on-error: true
-      - name: Archive + TestFlight
+      - name: Zip unsigned .app for Sideloadly (free Apple ID)
         continue-on-error: true
-        env:
-          APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
-          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-          DEVELOPMENT_TEAM: ${{ secrets.DEVELOPMENT_TEAM }}
         run: |
-          brew install fastlane
-          fastlane ios beta
-      - name: Upload sources
+          APP=$(find ~/Library/Developer/Xcode/DerivedData -name 'GlassOpenClaw.app' | head -1)
+          echo "app=$APP"
+          mkdir -p Payload
+          if [ -n "$APP" ]; then cp -R "$APP" Payload/; zip -r GlassOpenClaw-unsigned.ipa Payload; fi
+      - name: Upload unsigned IPA
         uses: actions/upload-artifact@v4
         with:
-          name: glassopenclaw-src
-          path: .
+          name: GlassOpenClaw-unsigned
+          path: |
+            GlassOpenClaw-unsigned.ipa
+            Payload/**
           if-no-files-found: ignore
