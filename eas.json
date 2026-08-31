@@ -1,0 +1,7 @@
+{
+  "cli": { "version": ">= 12.0.0" },
+  "build": {
+    "note": "Expo EAS cannot compile Meta Wearables DAT (native Swift SPM). Cloud IPA is GitHub Actions macos-latest in .github/workflows/build-ipa.yml, not eas build.",
+    "unsupported": true
+  }
+}

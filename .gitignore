@@ -1,0 +1,13 @@
+.DS_Store
+DerivedData/
+*.xcodeproj/
+*.xcworkspace/
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+*.ipa
+*.dSYM.zip
+*.p8
+*.p12
+AuthKey_*.p8
+.env
