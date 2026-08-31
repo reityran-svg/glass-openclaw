@@ -17,7 +17,7 @@ jobs:
           xcodebuild -scheme GlassOpenClaw -destination 'generic/platform=iOS' -configuration Release CODE_SIGNING_ALLOWED=NO build
         continue-on-error: true
       - name: Archive + TestFlight
-        if: ${{ secrets.APP_STORE_CONNECT_API_KEY != '' }}
+        continue-on-error: true
         env:
           APP_STORE_CONNECT_API_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
