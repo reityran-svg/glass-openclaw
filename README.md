@@ -4,8 +4,9 @@ Official until a paid Apple Developer account exists.
 
 ## Cloud unsigned build
 
-Repo: https://github.com/reityran-svg/glass-openclaw  
-Actions → **build-ipa** → artifact **GlassOpenClaw-unsigned**.
+Repo (public): https://github.com/reityran-svg/glass-openclaw  
+
+**IPA / unsigned build:** GitHub → **Actions** → latest **build-ipa** run → **Artifacts** (`GlassOpenClaw-unsigned`). Field MSI can open this URL without a collaborator invite. If the artifact is empty, `xcodebuild` failed; use `/glass/dat` until Sideloadly has a signed `.app`.
 
 `xcodebuild` may still fail on DAT SPM; if the artifact is empty, use `/glass/dat` until a Mac signs the project.
 
