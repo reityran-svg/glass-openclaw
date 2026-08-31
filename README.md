@@ -8,7 +8,8 @@ Repo (public): https://github.com/reityran-svg/glass-openclaw
 
 **IPA / unsigned build:** GitHub → **Actions** → latest **build-ipa** run → **Artifacts** (`GlassOpenClaw-unsigned`). Field MSI can open this URL without a collaborator invite. If the artifact is empty, `xcodebuild` failed; use `/glass/dat` until Sideloadly has a signed `.app`.
 
-`xcodebuild` may still fail on DAT SPM; if the artifact is empty, use `/glass/dat` until a Mac signs the project.
+Download **Actions → latest build-ipa → Artifacts → glass-openclaw-unsigned**.  
+That IPA is **unsigned**. Sideloadly must re-sign it with a **free Apple ID** (7-day cert). Do not install it raw.
 
 ## Sideloadly on desktop-ej8jl1o (Windows, free Apple ID)
 

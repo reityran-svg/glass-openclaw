@@ -2,32 +2,45 @@ name: build-ipa
 on:
   workflow_dispatch:
   push:
-    paths:
-      - "DAT-iPhone/**"
-      - ".github/workflows/build-ipa.yml"
+    branches: [master]
+env:
+  HOMEBREW_NO_REQUIRE_TAP_TRUST: "1"
 jobs:
   ipa:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: XcodeGen
-        run: brew install xcodegen && xcodegen generate
-      - name: Build (unsigned CI)
-        run: |
-          xcodebuild -scheme GlassOpenClaw -destination 'generic/platform=iOS' -configuration Release CODE_SIGNING_ALLOWED=NO build
-        continue-on-error: true
-      - name: Zip unsigned .app for Sideloadly (free Apple ID)
-        continue-on-error: true
-        run: |
-          APP=$(find ~/Library/Developer/Xcode/DerivedData -name 'GlassOpenClaw.app' | head -1)
-          echo "app=$APP"
-          mkdir -p Payload
-          if [ -n "$APP" ]; then cp -R "$APP" Payload/; zip -r GlassOpenClaw-unsigned.ipa Payload; fi
-      - name: Upload unsigned IPA
-        uses: actions/upload-artifact@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
         with:
-          name: GlassOpenClaw-unsigned
-          path: |
-            GlassOpenClaw-unsigned.ipa
-            Payload/**
-          if-no-files-found: ignore
+          node-version: "24"
+      - name: XcodeGen
+        run: |
+          brew install xcodegen
+          xcodegen generate
+      - name: Unsigned iphoneos build
+        run: |
+          xcodebuild \
+            -scheme GlassOpenClaw \
+            -sdk iphoneos \
+            -configuration Release \
+            -derivedDataPath derived \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build
+      - name: Pack Payload IPA
+        run: |
+          set -e
+          APP=$(find derived/Build/Products -name 'GlassOpenClaw.app' | head -1)
+          echo "APP=$APP"
+          test -n "$APP"
+          rm -rf Payload
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          zip -r glass-openclaw-unsigned.ipa Payload
+          ls -la glass-openclaw-unsigned.ipa
+      - uses: actions/upload-artifact@v4
+        with:
+          name: glass-openclaw-unsigned
+          path: glass-openclaw-unsigned.ipa
+          if-no-files-found: error
